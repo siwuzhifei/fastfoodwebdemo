@@ -22,6 +22,8 @@ $roleID = "";
 $errorMessage ="";
 $successMessage="";
 
+
+
 if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
     // POST method: add new staff
     $staffID = $_POST['staffID'];
