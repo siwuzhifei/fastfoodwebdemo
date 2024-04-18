@@ -1,7 +1,4 @@
-
 <?php
-
-//https://www.youtube.com/watch?v=NqP0-UkIQS4&ab_channel=BoostMyTool
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -9,6 +6,12 @@ $database = "fastfood_xc";
 
 // Create connection
 $connnection = new mysqli($servername, $username, $password, $database);
+  // Check connection
+
+  if ($connnection->connect_error) {
+    die("Connection failed: " . $connnection->connect_error);
+}
+
 
 $staffID = "";
 $name = "";
@@ -19,13 +22,14 @@ $mobile = "";
 $password = "";
 $roleID = "";
 
+$userExistMessage = "";
 $errorMessage ="";
 $successMessage="";
 
 
 
 if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
-    // POST method: add new staff
+    // POST method: add new staff to database
     $staffID = $_POST['staffID'];
     $name = $_POST['name'];
     $address = $_POST['address'];
@@ -37,17 +41,33 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     do {
-        if (empty($staffID) || empty($name) || empty($address) || empty($dateOfBirth) || empty($email) || empty($mobile) || empty($roleID)
+    // check if staff already exists
+     $sql1 = "select * from staff where staffID = '$staffID'";
+     $sql2 = "select * from staff where email = '$email'";
+     $result1 = $connnection->query($sql1);
+     $result2 = $connnection->query($sql2);
+        if ($result1->num_rows > 0|| $result2->num_rows > 0) {
+            $userExistMessage = "Staff already exists, Check staffID or email";
+            die($userExistMessage);
+        }       
+        if (empty($staffID) || empty($name) || empty($address) || empty($dateOfBirth) || empty($email) || empty($mobile) || empty($roleID)|| empty($password)
     ){
             $errorMessage = "All fields are required";
-            break;
+            die($errorMessage);
         }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errorEmailMessage = "Invalid email format";
+            die($errorEmailMessage);
+        }
+
+
 
         // add new staff to database
         $sql = "insert into staff (staffID, name, address, dateOfBirth, email, mob, password, roleID)
                  values ('$staffID','$name', '$address', '$dateOfBirth', '$email', '$mobile', '$password', '$roleID')";
         $result = $connnection->query($sql);
-
+        // check query execution success
         if (!$result) {
             trigger_error('Invalid query: ' . $connnection->error);
             break;
@@ -63,7 +83,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $successMessage = "Staff added successfully";
 
-        header("Location: /fastfood/index.php");
+        header("Location: /XCfastfood/index.php");
         exit;
 
     } while (false);
@@ -165,11 +185,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/fastfood/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
 
     </div>
+    <script>https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js</script>
 </body>
 </html>

@@ -6,7 +6,10 @@ $database = "fastfood_xc";
 
 // Create connection
 $connnection = new mysqli($servername, $username, $password, $database);
-
+ // Check connection
+ if ($connnection->connect_error) {
+     die("Connection failed: " . $connnection->connect_error);
+ }
 
 $staffID = "";
 $name = "";
@@ -23,7 +26,7 @@ $successMessage="";
 if ( $_SERVER['REQUEST_METHOD'] == 'GET'){
     // GET method: show the data of the staff
     if (!isset($_GET["staffID"])){
-      header("Location: /fastfood/index.php");
+      header("Location: /XCfastfood/index.php");
       exit;
     }
     $staffID = $_GET["staffID"];
@@ -34,7 +37,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'GET'){
     $row = $result->fetch_assoc();
 
     if (!$row){
-        header("Location: /fastfood/index.php");
+        header("Location: /XCfastfood/index.php");
         exit;
          }
         $name = $row['name'];
@@ -70,7 +73,7 @@ else{
             break;
         }
         $successMessage = "Staff updated successfully";
-        header("Location: /fastfood/index.php");
+        header("Location: /XCfastfood/index.php");
         exit;
     } while(false);
    
@@ -165,11 +168,12 @@ else{
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/fastfood/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
 
     </div>
+    <script>https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js</script>
 </body>
 </html>

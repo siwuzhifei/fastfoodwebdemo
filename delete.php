@@ -15,7 +15,9 @@ if (isset($_GET["staffID"])) {
     $result = $connnection->query($sql);
 }
 
-header("Location: /fastfood/index.php");
+
+
+header("Location: /XCfastfood/index.php");
 exit;
 
 ?>
