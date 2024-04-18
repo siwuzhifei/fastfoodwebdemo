@@ -9,7 +9,7 @@
 <body>
     <div class="container my-5">
         <h2 >List of Staff</h2>
-        <a class="btn btn-primary" href="/fastfood/create.php" role="button">New Staff</a>
+        <a class="btn btn-primary" href="/XCfastfood/create.php" role="button">New Staff</a>
         <br>
         <table class="table">
             <thead>
@@ -46,7 +46,7 @@
                 $result = $connnection->query($sql);
 
                 if (!$result) {
-                    trigger_error('Invalid query: ' . $connnection->error);
+                    die('Invalid query: ' . $connnection->error);
                 }
                 // output data of each row
                 while($row = $result->fetch_assoc()) {
@@ -62,15 +62,15 @@
                     <td>$row[roleID]</td>
                     
                     <td>
-                        <a class='btn btn-primary btn-sm' href='/fastfood/edit.php?staffID=$row[staffID]' role='button'>Edit</a>
-                        <a class='btn btn-danger btn-sm' href='/fastfood/delete.php?staffID=$row[staffID]' role='button'>Delete</a>
-                        <a class='btn btn-success btn-sm' href='/fastfood/availability.php?staffID=$row[staffID]' role='button'>Avalability</a> 
+                        <a class='btn btn-primary btn-sm' href='/XCfastfood/edit.php?staffID=$row[staffID]' role='button'>Edit</a>
+                        <a class='btn btn-danger btn-sm' href='/XCfastfood/delete.php?staffID=$row[staffID]' role='button'>Delete</a>
+                        <a class='btn btn-success btn-sm' href='/XCfastfood/availability.php?staffID=$row[staffID]' role='button'>Avalability</a> 
                     </td>
                     </tr>
                 ";                
                 }
-               
             ?>
+            </tbody>
 
 
     </div>
