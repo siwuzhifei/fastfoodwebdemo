@@ -22,7 +22,7 @@
                     <th>DateTimeFrom</th>
                     <th>DateTimeTo</th>
                     <th>StaffID</th>
-                    <th>Name</th>
+                    <th>Title</th>
                     <th>RosterID</th>
 
                 </tr>
@@ -51,17 +51,17 @@
                     $staffID = $_GET["staffID"];
                 }
                 // Read all row from database table
-                $sql = "SELECT roster.dateTimeFrom,roster.dateTimeTo,staff.staffID, roster.rosterID FROM rosterrole
+                $sql = "SELECT roster.dateTimeFrom,roster.dateTimeTo,staff.staffID,role.name, roster.rosterID FROM rosterrole
                 JOIN roster on roster.rosterID = rosterrole.rosterID 
                 JOIN staff on staff.roleID = rosterrole.roleID
-                WHERE staff.staffID = $staffID
-                Order by roster.dateTimeFrom;";
+                JOIN role on role.roleID =staff.roleID
+                WHERE staff.staffID = $staffID";
                 $result = $connnection->query($sql);
                 // don't seem to work
                 if (empty($result)) {
                     echo "No data found";
                     header("Location: /XCfastfood/index.php");
-                    exit
+                    exit;
                 }
 
                 if ($result->num_rows > 0) {
