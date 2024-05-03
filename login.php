@@ -16,7 +16,7 @@
                             <h2>Login Form</h2>
                         </div>
                         <div class="card-body">
-                            <form action="login.php" method="post">
+                            <form action="login.php" method="POST">
                                 <div class="form-group">
                                     <label for="username">Email:</label>
                                     <input type="email" class="form-control" id="email" name="email" required>
@@ -29,7 +29,7 @@
                             </form>
                         </div>
                         <div class="card-footer text-right">
-                            <small>&copy Xiaoyan CHEN</small></div>
+                            <small>&copy Anthony Fastfood</small></div>
                     </div>
             </div>
         </div>
@@ -37,24 +37,25 @@
 </html>
     
 <?php
+// use to control login success/fail
+$is_invalid = false;
 
 // Create connection
 $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
 
 if($connnection->connect_error){
-die("Connection failed: " . $connnection->connect_error);
+ die("Connection failed: " . $connnection->connect_error);
 } else {
-
-    $sql = sprintf("SELECT * FROM staff WHERE email = '%s'", $email);
-    $stmt = $connnection->prepare($sql);
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt_result = $stmt->get_result();
+    // read the row of the selected client from database table
+    //$sql = "SELECT * FROM staff where email='$email'";
+    // to avoid a sql injection attack, we should use the following:
+    $sql = sprintf("SELECT * FROM staff WHERE email = '%s'", $connnection->real_escape_string($email));
+    $stmt_result = $connnection->query($sql);
     if($stmt_result->num_rows > 0){
         $data = $stmt_result->fetch_assoc();
         if($password === $data['password']){
@@ -74,5 +75,8 @@ die("Connection failed: " . $connnection->connect_error);
         echo "Invalid email or password";
     }
 }
+// if we reach this point, form is submitted, but email or password is invalid
+$is_invalid = true;
+
 }
 ?>
