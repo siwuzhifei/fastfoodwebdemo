@@ -25,9 +25,8 @@ if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
             top: 25%;
             left: 15%;
             text-align: left;
-        }
-
-        </style>
+        } </style>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body style="height:500px">
 <div class="container">
@@ -48,7 +47,7 @@ if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <a class="nav-link active" aria-current="page" href="/XCfastfood/index.php">
                   Home
                 </a>
               <li class="nav-item dropdown">
@@ -60,23 +59,23 @@ if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
                   Manage Staff
                 </a>
               <ul class="dropdown-menu" aria-labelledby="dropdown01">
-              <li><a class="dropdown-item" href="#">Create</a></li>
-              <li><a class="dropdown-item" href="#">Update</a></li>
-              <li><a class="dropdown-item" href="#">Delete</a></li>
+              <li><a class="dropdown-item" href="/XCfastfood/create2.php">Create</a></li>
+              <li><a class="dropdown-item" href="/XCfastfood/edit2.php">Update</a></li>
+              <li><a class="dropdown-item" href="/XCfastfood/delete2.php">Delete</a></li>
               </ul>
           </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/XCfastfood/availability2.php">
                   Availablity
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="">
                   My Details
                 </a>
               </li>
              <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Logout</a>
+                    <a class="nav-link" href="/XCfastfood/logout.php">Logout</a>
             </li>
             </ul>
             <!-- 
