@@ -1,11 +1,22 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "fastfood_xc";
+    session_start();
 
-// Create connection
-$connnection = new mysqli($servername, $username, $password, $database);
+    //print_r($_SESSION);
+   $staffID = $_SESSION['staffID'] ;
+   // if user did not login, this will re-direct to login page.
+    if(($_SESSION['roleID']) != 3) {
+    echo "You are not authorised to view this page";
+       exit();
+      }
+
+      //  if user did not login, this will re-direct to login page.
+if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+    header("Location: login.php");
+    exit();
+}
+
+ // Create connection
+$connnection = new mysqli("localhost", "root", "", "fastfood_xc");
   // Check connection
 
   if ($connnection->connect_error) {
@@ -185,7 +196,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>

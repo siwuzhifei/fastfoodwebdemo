@@ -3,9 +3,16 @@
       session_start();
 
      //print_r($_SESSION);
-    $_SESSION['staffID'] = $row['staffID'];
+    $staffID = $_SESSION['staffID'] ;
+    // if user did not login, this will re-direct to login page.
+     if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+        header("location: login.php");
+        exit();
+       }
                       
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,63 +24,66 @@
 </head>
 <body>
     <div class="container my-5">
-        <h2 >Availability</h2>
-        <br>
+        <div class="card-header">
+        <h4 >Specify when you are available to work</h4>
+        </div>
+        <div class="card-body">
         <form action="availUpdate.php" method="POST">
         <div>
         <table class="table">
             <thead>
                 <tr>
-                    <th>Add</th>
+                    <th>
+                        <button type="submit" name="AvailableUpdate-btn" class="btn btn-primary">Update</button>
+                    </th>
                     <th>DateTimeFrom</th>
                     <th>DateTimeTo</th>
                     <th>StaffID</th>
+                    <th>Title</th>
                     <th>RosterID</th>
 
                 </tr>
             </thead>
             <tbody>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $database = "fastfood_xc";
 
                 // Create connection
-                $connnection = new mysqli($servername, $username, $password, $database);
+                $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
                 // Check connection
                 if ($connnection->connect_error) {
-                    die("Connection failed: " . $connnection->connect_error);
+                    die("Connection failed: " ). $connnection->connect_error;
                 }
 
             if ( $_SERVER['REQUEST_METHOD'] == 'GET'){
                     // GET method: show the data of the staff
-                    if (!isset($_GET["staffID"])){
-                      header("Location: /XCfastfood/index.php");
-                      exit;
-                    }
-                    $staffID = $_GET["staffID"];
+                    if (!isset($staffID)){
+                        die("get staffid failed: " ). $connnection->connect_error;
+                      //header("Location: /XCfastfood/index2.php");
+                      //exit;
+                    };
                 }
+               
                 // Read all row from database table
-                $sql = "SELECT roster.dateTimeFrom,roster.dateTimeTo,staff.staffID, roster.rosterID FROM rosterrole
+                $sql = "SELECT roster.dateTimeFrom,roster.dateTimeTo,staff.staffID,role.name, roster.rosterID FROM rosterrole
                 JOIN roster on roster.rosterID = rosterrole.rosterID 
                 JOIN staff on staff.roleID = rosterrole.roleID
-                WHERE staff.staffID = $staffID;";
-                $result = $connnection->query($sql);
-                
+                JOIN role on role.roleID =staff.roleID
+                WHERE staff.staffID = $staffID";
 
-                if (!$result) {
-                    die('Invalid query: ' . $connnection->error);
+                $result = $connnection->query($sql);
+
+                // don't seem to work
+                if (empty($result)) {
+                    echo "No data found";
+                    header("Location: /XCfastfood/index.php");
+                    exit; 
                 }
                 
                 if ($result->num_rows > 0) {
                 // output data of each row
                    foreach($result as $row) {
-
-                   
                 ?>
-
                     <tr>
                     <td>
                     <input type='checkbox' name='availability_staff_add[]' value="<?=$row['rosterID'];?>">
@@ -81,17 +91,20 @@
                     <td><?=$row['dateTimeFrom'];?></td>
                     <td><?=$row['dateTimeTo'];?></td>
                     <td><?=$row['staffID'];?></td>
+                    <td><?=$row['name'];?></td>
                     <td><?=$row['rosterID'];?></td>
 
                     </tr> 
                     
                 <?php 
+                ?>
+                <!--ensure that staffIDis passed to the availability.php via hidden input type-->
+                <input type="hidden" name="staffID" value="<?php echo $staffID?>">    
+                <?php
+
                 }
-            }
-            else {
-                echo "0 results";
-            }
-            ?>
+                }
+                ?>
             </tbody>
         </table>
         </div>
@@ -100,11 +113,11 @@
                     <button type="submit" name="Availability_add" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
-        
+    </div>
 
     </div>
     <script>https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js</script>

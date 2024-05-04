@@ -1,44 +1,32 @@
-<?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "fastfood_xc";
+<?php 
+      session_start();
 
-// Create connection
-$connnection = new mysqli($servername, $username, $password, $database);
+     //print_r($_SESSION);
+    $staffID = $_SESSION['staffID'] ;
+    // if user did not login, this will re-direct to login page.
+     if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+        header("location: login.php");
+        exit();
+       }
+                      
+ // Create connection
+ $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
  // Check connection
  if ($connnection->connect_error) {
      die("Connection failed: " . $connnection->connect_error);
  }
 
-$staffID = "";
-$name = "";
-$address = "";
-$dateOfBirth = "";
-$email = "";
-$mobile = "";
-$password = "";
-$roleID = "";
-
-$errorMessage ="";
-$successMessage="";
 
 if ( $_SERVER['REQUEST_METHOD'] == 'GET'){
-    // GET method: show the data of the staff
-    if (!isset($_GET["staffID"])){
-      header("Location: /XCfastfood/index.php");
-      exit;
-    }
-    $staffID = $_GET["staffID"];
-
+    
     // Read all row from database table
     $sql = "SELECT * FROM staff where staffID = $staffID";
     $result = $connnection->query($sql);
     $row = $result->fetch_assoc();
 
     if (!$row){
-        header("Location: /XCfastfood/index.php");
-        exit;
+        //header("Location: /XCfastfood/index.php");
+        die("Connection failed: " . $connnection->connect_error);
          }
         $name = $row['name'];
         $address = $row['address'];
@@ -141,7 +129,7 @@ else{
                     <input type="password" class="form-control" name="password" value="<?php echo $password;?>">
                 </div>
             </div>            
-            <div class="row mb-3">
+            <div class="row mb-3" style="display:none">
                 <label class="col-sm-3 col-form-label">RoleID</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="roleID" value="<?php echo $roleID;?>">
@@ -168,7 +156,7 @@ else{
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
