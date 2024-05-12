@@ -3,8 +3,9 @@
 
     //print_r($_SESSION);
    $staffID = $_SESSION['staffID'] ;
-   // if user did not login, this will re-direct to login page.
-    if(($_SESSION['roleID']) != 3) {
+   $roleID = $_SESSION['roleID'];
+   // if user is not admin, this will re-direct to login page.
+    if($roleID !=3 && $roleID !=4) {
     echo "You are not authorised to view this page";
        exit();
       }

@@ -8,6 +8,14 @@ if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
     exit();
 }
 ?>
+// Display data based on RoleID
+                if ($userRoleID == 3 || $userRoleID == 4) {
+                    // If RoleID is 3 or 4, display all staff details
+                    $sql = "SELECT * FROM staff";
+                } else {
+                    // If RoleID is not 3 or 4, display only the user's details
+                    $sql = "SELECT * FROM staff WHERE Name = '" . $user_profile['Name']. "'";
+                }
 
 
 <!DOCTYPE html>

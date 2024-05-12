@@ -1,15 +1,28 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "fastfood_xc";
+ session_start();
 
+ //print_r($_SESSION);
+$staffID = $_SESSION['staffID'];
+$roleID = $_SESSION['roleID'];
+// if user did not login, this will re-direct to login page.
+ if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+    header("location: login.php");
+    exit();
+   }
+
+if($roleID !=3 && $roleID !=4) {
+    echo "You are not authorised to view this page";
+    //session_destroy();
+    //header("Location: /XCfastfood/login.php");
+    //header("location: login.php");
+       exit();
+      }
+                  
 // Create connection
-$connnection = new mysqli($servername, $username, $password, $database);
-  // Check connection
-
-  if ($connnection->connect_error) {
-    die("Connection failed: " . $connnection->connect_error);
+$connnection = new mysqli("localhost", "root", "", "fastfood_xc");
+// Check connection
+if ($connnection->connect_error) {
+ die("Connection failed: " . $connnection->connect_error);
 }
 
 

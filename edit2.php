@@ -2,7 +2,8 @@
       session_start();
 
      //print_r($_SESSION);
-    $staffID = $_SESSION['staffID'] ;
+    $staffID = $_SESSION['staffID'];
+    $roleID = $_SESSION['roleID'];
     // if user did not login, this will re-direct to login page.
      if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
         header("location: login.php");

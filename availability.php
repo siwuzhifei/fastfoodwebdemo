@@ -29,18 +29,12 @@
             </thead>
             <tbody>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $database = "fastfood_xc";
+                 $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
-                // Create connection
-                $connnection = new mysqli($servername, $username, $password, $database);
-
-                // Check connection
-                if ($connnection->connect_error) {
-                    die("Connection failed: " . $connnection->connect_error);
-                }
+                 // Check connection
+                 if ($connnection->connect_error) {
+                     die("Connection failed: " ). $connnection->connect_error;
+                 }
 
             if ( $_SERVER['REQUEST_METHOD'] == 'GET'){
                     // GET method: show the data of the staff
@@ -81,12 +75,9 @@
 
                     </tr> 
                     
-                <?php 
-                ?>
                 <!-- ensure that staffID is also passed to availUpdate.php via hidden input type -->
-                <input type="hidden" name="staffID" value="<?=$row['staffID'];?>">
+                <input type="hidden" name="hiddenstaffID" value="<?=$row['staffID'];?>">
                 <?php
-
                 }
             }
             
@@ -96,7 +87,7 @@
         </div>
             <div class="row mb-3">
                 <div class="col-sm-3 offset-sm-3 d-grid">
-                    <button type="submit" name="Availability_add" class="btn btn-primary">Save</button>
+                    <button type="submit" name="Availability_add_btn" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
                     <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>

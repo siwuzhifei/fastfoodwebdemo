@@ -9,7 +9,15 @@
 <body>
     <div class="container my-5">
         <h2 >List of Staff</h2>
-        <a class="btn btn-primary" href="/XCfastfood/create.php" role="button">New Staff</a>
+        <div class="row mb-3">
+                <div class="col-sm-3 offset-sm-3 d-grid">
+                <a class="btn btn-primary" href="/XCfastfood/create.php" role="button">New Staff</a>
+                </div>
+                <div class="col-sm-3 d-grid">
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Back to Homepage</a>
+                </div>
+            </div>
+        
         <br>
         <table class="table">
             <thead>
@@ -25,24 +33,32 @@
 
                 </tr>
             </thead>
-
+           
             <tbody>
                 <?php
-                $servername = "localhost";
-                $username = "root";
-                $password = "";
-                $database = "fastfood_xc";
+                session_start();
 
-                // Create connection
-                $connnection = new mysqli($servername, $username, $password, $database);
+                //print_r($_SESSION);
+               $staffID = $_SESSION['staffID'] ;
+               $roleID = $_SESSION['roleID'];
 
-                // Check connection
+            // Create connection
+                $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
-                if ($connnection->connect_error) {
-                    die("Connection failed: " . $connnection->connect_error);
+            // Check connection
+            if ($connnection->connect_error) {
+                die("Connection failed: " ). $connnection->connect_error;
                 }
-                // Read all row from database table
-                $sql = "SELECT * FROM staff";
+
+                // Display data based on RoleID
+                if ($roleID == 3 || $roleID == 4) {
+                    // If RoleID is 3 or 4, display all staff details
+                    $sql = "SELECT * FROM staff";
+                } else {
+                    // If RoleID is not 3 or 4, display only the user's details
+                    $sql = "SELECT * FROM staff where staff.staffID = $staffID";
+                }
+         
                 $result = $connnection->query($sql);
 
                 if (!$result) {

@@ -74,14 +74,12 @@
                 // Display data based on RoleID
                 if ($roleID == 3 || $roleID == 4) {
                     // If RoleID is 3 or 4, display all staff details
-                    $sql = "SELECT av.AvailabilityID,roster.dateTimeFrom,roster.dateTimeTo,staff.staffID,role.name, roster.rosterID FROM availability AS av
-                    JOIN roster on roster.rosterID = av.rosterID 
+                    $sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
                     JOIN staff on staff.staffID = av.staffID
                     JOIN role on role.roleID =staff.roleID";
                 } else {
                     // If RoleID is not 3 or 4, display only the user's details
-                    $sql = "SELECT av.AvailabilityID,roster.dateTimeFrom,roster.dateTimeTo,staff.staffID,role.name, roster.rosterID FROM availability as	
-                    JOIN roster on roster.rosterID = av.rosterID 
+                    $sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
                     JOIN staff on staff.staffID = av.staffID
                     JOIN role on role.roleID =staff.roleID
                     WHERE staff.staffID = $staffID";
