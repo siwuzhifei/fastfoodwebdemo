@@ -10,6 +10,11 @@
         header("location: login.php");
         exit();
        }
+
+    if (!empty($_SESSION['availmessage'])) {
+        echo $_SESSION['availmessage'];
+        $_SESSION['availmessage'] = "";
+    }
                       
 ?>
 
@@ -76,13 +81,15 @@
                     // If RoleID is 3 or 4, display all staff details
                     $sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
                     JOIN staff on staff.staffID = av.staffID
-                    JOIN role on role.roleID =staff.roleID";
+                    JOIN role on role.roleID =staff.roleID
+                    order by rosterID, staffID";
                 } else {
                     // If RoleID is not 3 or 4, display only the user's details
                     $sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
                     JOIN staff on staff.staffID = av.staffID
                     JOIN role on role.roleID =staff.roleID
-                    WHERE staff.staffID = $staffID";
+                    WHERE staff.staffID = $staffID
+                    order by rosterID";
                 }
                
                 // Read all row from database table
@@ -130,7 +137,7 @@
                     <button type="submit" name="AvailableDelete-btn" class="btn btn-primary">Save</button>
                 </div> -->
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Back</a>
                 </div>
             </div>
         </form>

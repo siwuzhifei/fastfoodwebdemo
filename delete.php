@@ -1,4 +1,5 @@
 <?php
+session_start();
 if (isset($_GET["staffID"])) {
 
     $staffID = $_GET["staffID"];
@@ -11,13 +12,15 @@ if (isset($_GET["staffID"])) {
     // Create connection
     $connnection = new mysqli($servername, $username, $password, $database);
 
-    $sql = "DELETE FROM staff WHERE staffID = $staffID";
+   $sql = "DELETE FROM staff WHERE staffID = $staffID";
     $result = $connnection->query($sql);
-}
+
+    $_SESSION['deleteMessage'] = "Staff deleted successfully";
+    header("Location: /XCfastfood/index.php");
+    exit;
 
 
+} 
 
-header("Location: /XCfastfood/index.php");
-exit;
 
 ?>

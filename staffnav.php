@@ -5,11 +5,11 @@ session_start();
 //  if user did not login, this will re-direct to login page.
 if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
     header("Location: login.php");
-    exit();
-}
+    exit();}
+
 if (!empty($_SESSION['updatemessage'])) {
-  echo $_SESSION['updatemessage'];
-  $_SESSION['updatemessage'] = "";
+    echo $_SESSION['updatemessage'];
+    $_SESSION['updatemessage'] = "";
 }
 ?>
 <!DOCTYPE html>
@@ -48,25 +48,12 @@ if (!empty($_SESSION['updatemessage'])) {
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/XCfastfood/index2.php">
+                <a class="nav-link active" aria-current="page" href="/XCfastfood/staffnav.php">
                   Home
                 </a>
-              </li>
-            <li class="nav-item dropdown">
-              <a href="#" class="nav-link dropdown-toggle"
-                  role="button"
-                  id="navbarDropdown" 
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"> 
-                  Manage Staff
-                </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdwon">
-              <li><a class="dropdown-item" href="/XCfastfood/create2.php">Create</a></li>
-              <li><a class="dropdown-item" href="/XCfastfood/index.php">Update</a></li>
-              <li><a class="dropdown-item" href="/XCfastfood/index.php">Delete</a></li>
-              </ul>
-          </li>
-          <li class="nav-item">
+                </li>
+
+            <li class="nav-item">
                 <a class="nav-link" href="/XCfastfood/edit2.php">
                 My Details
                 </a>
@@ -76,13 +63,6 @@ if (!empty($_SESSION['updatemessage'])) {
                   Availablity
                 </a>
               </li>
-               <!-- 
-              <li class="nav-item">
-                <a class="nav-link" href="">
-                  My Details
-                </a>
-              </li>
-              -->
              <li class="nav-item">
                     <a class="nav-link" href="/XCfastfood/logout.php">Logout</a>
             </li>
@@ -99,11 +79,11 @@ if (!empty($_SESSION['updatemessage'])) {
 </div>
   <br><br><br><br><br>
 <div class='MyDetails'>
-    <h1 style="color:blue;"> Welcome Anthony Fastfood, This is a Manager account </h1>
+    <h1 style="color:blue;"> Welcome Anthony Fastfood Staff </h1>
     <p>Your Name is <?php echo $_SESSION['name'] ; ?></p>
     <p>Your Email is <?php echo $_SESSION['email'] ; ?></p>
     <p>Your staffID is <?php echo $_SESSION['staffID'] ; ?></p>
-    <p>You are the manager of Anthony's Fastfood</p>
+    <p>Your RoleID is <?php echo $_SESSION['roleID'] ; ?></p>
 </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>

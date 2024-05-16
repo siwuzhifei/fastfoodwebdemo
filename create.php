@@ -94,7 +94,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
         $password = "";
         $roleID = "";
 
-        $successMessage = "Staff added successfully";
+        $_SESSION['successMessage'] = "Staff added successfully";
 
         header("Location: /XCfastfood/index.php");
         exit;

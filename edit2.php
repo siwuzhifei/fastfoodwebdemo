@@ -9,6 +9,10 @@
         header("location: login.php");
         exit();
        }
+
+    if (!empty($_SESSION['updatemessage'])) {
+        echo $_SESSION['updatemessage'];
+        $_SESSION['updatemessage'] = "";}
                       
  // Create connection
  $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
@@ -61,8 +65,8 @@ else{
             trigger_error('Invalid query: ' . $connnection->error);
             break;
         }
-        $successMessage = "Staff updated successfully";
-        header("Location: /XCfastfood/index.php");
+        $_SESSION['updatemessage'] = "Staff updated successfully";
+        header("Location: /XCfastfood/edit2.php");
         exit;
     } while(false);
    

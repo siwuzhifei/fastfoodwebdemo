@@ -37,6 +37,21 @@
             <tbody>
                 <?php
                 session_start();
+                if (empty($_SESSION['staffID'])||empty($_SESSION['roleID'])){
+                    header("Location: /XCfastfood/login.php");
+                }
+                if (!empty($_SESSION['successMessage'])){
+                    echo $_SESSION['successMessage'];
+                    $_SESSION['successMessage']="";}
+
+                if (!empty($_SESSION['deleteMessage'])){
+                    echo $_SESSION['deleteMessage'];
+                    $_SESSION['deleteMessage']="";}
+
+                if (!empty($_SESSION['updatemessage'])){
+                    echo $_SESSION['updatemessage'];
+                    $_SESSION['updatemessage']="";}
+                    
 
                 //print_r($_SESSION);
                $staffID = $_SESSION['staffID'] ;

@@ -1,6 +1,5 @@
 <?php
 
-
  // Create connection
  $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
@@ -17,7 +16,7 @@ if (isset($_POST['AvailableDelete-btn'])) {
     $result = $connnection->query($sql);
 
     if ($result) {
-        $_SESSION['message'] = "Record deleted successfully";
+        $_SESSION['availmessage'] = "Availability deleted successfully";
         header("Location: /XCfastfood/availability2.php");
     } else {
         echo "Error: " . $sql . "<br>" . $connnection->error;

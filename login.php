@@ -26,7 +26,12 @@ if($connnection->connect_error){
             $_SESSION['email'] = $data['email'];
             $_SESSION['roleID'] = $data['roleID'];
 
-            header("Location: /XCfastfood/index2.php");
+
+            if ($data['roleID'] == 3 || $data['roleID'] == 4) {
+                header("Location: /XCfastfood/index2.php");
+                exit;
+            } else {
+            header("Location: /XCfastfood/staffnav.php");
             exit;
         
         } 
@@ -34,7 +39,7 @@ if($connnection->connect_error){
 // if we reach this point, form is submitted, but email or password is invalid
     $is_invalid = true;
 }
- 
+}   
 ?>
 
 <!DOCTYPE html>
