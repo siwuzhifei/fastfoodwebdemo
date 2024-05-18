@@ -1,5 +1,5 @@
 <?php
-
+session_start();
  // Create connection
  $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
@@ -24,7 +24,7 @@ if (isset($_POST['Availability_add_btn'])) {
         AND staff.staffID = $avail_staffID";
     $result = $connnection->query($sql);
     if ($result) {
-        echo "New record update successfully";
+        $_SESSION['availcreatemsg'] = "New record update successfully";
     } else {
         echo "Error: " . $sql . "<br>" . $connnection->error;
     }
@@ -49,9 +49,9 @@ $connnection->close();
         </div>
         <div class="card-body">
             <?php
-            if (isset($_SESSION['message'])) {
-                echo "<h4>" . $_SESSION['message'] . "</h4>";
-                unset($_SESSION['message']);
+            if (isset($_SESSION['availcreatemsg'])) {
+                echo $_SESSION['availcreatemsg'];
+                unset($_SESSION['availcreatemsg']);
             }
             ?>
         <form action="availDelete.php" method="POST">

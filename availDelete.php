@@ -1,5 +1,5 @@
 <?php
-
+session_start();
  // Create connection
  $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 

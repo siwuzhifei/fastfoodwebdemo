@@ -10,11 +10,9 @@
         header("location: login.php");
         exit();
        }
+    
 
-    if (!empty($_SESSION['availmessage'])) {
-        echo $_SESSION['availmessage'];
-        $_SESSION['availmessage'] = "";
-    }
+
                       
 ?>
 
@@ -35,9 +33,13 @@
         </div>
         <div class="card-body">
             <?php
-            if (isset($_SESSION['message'])) {
-                echo "<h4>" . $_SESSION['message'] . "</h4>";
-                unset($_SESSION['message']);
+            if (!empty($_SESSION['availmessage'])) {
+                echo  $_SESSION['availmessage'];
+                unset($_SESSION['availmessage']);
+            }
+            if (!empty($_SESSION['availcreatemsg'])) {
+                echo  $_SESSION['availcreatemsg'];
+                unset($_SESSION['availcreatemsg']);
             }
             ?>
         <form action="availDelete.php" method="POST">
@@ -132,14 +134,6 @@
             </tbody>
         </table>
         </div>
-            <div class="row mb-3">
-                <!-- <div class="col-sm-3 offset-sm-3 d-grid">
-                    <button type="submit" name="AvailableDelete-btn" class="btn btn-primary">Save</button>
-                </div> -->
-                <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Back</a>
-                </div>
-            </div>
         </form>
     </div>
 

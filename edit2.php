@@ -66,8 +66,12 @@ else{
             break;
         }
         $_SESSION['updatemessage'] = "Staff updated successfully";
-        header("Location: /XCfastfood/edit2.php");
-        exit;
+        if ($data['roleID'] == 3 || $data['roleID'] == 4) {
+            header("Location: /XCfastfood/index2.php");
+            exit;
+        } else {
+        header("Location: /XCfastfood/staffnav.php");
+        exit;}
     } while(false);
    
 }
