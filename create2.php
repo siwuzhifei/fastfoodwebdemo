@@ -1,28 +1,27 @@
 <?php
- session_start();
+    session_start();
 
- //print_r($_SESSION);
-$staffID = $_SESSION['staffID'];
-$roleID = $_SESSION['roleID'];
-// if user did not login, this will re-direct to login page.
- if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
-    header("location: login.php");
-    exit();
-   }
-
-if($roleID !=3 && $roleID !=4) {
+    //print_r($_SESSION);
+   $staffID = $_SESSION['staffID'] ;
+   $roleID = $_SESSION['roleID'];
+   // if user is not admin, this will re-direct to login page.
+    if($roleID !=3 && $roleID !=4) {
     echo "You are not authorised to view this page";
-    //session_destroy();
-    //header("Location: /XCfastfood/login.php");
-    //header("location: login.php");
        exit();
       }
-                  
-// Create connection
+
+      //  if user did not login, this will re-direct to login page.
+if (!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+    header("Location: login.php");
+    exit();
+}
+
+ // Create connection
 $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
-// Check connection
-if ($connnection->connect_error) {
- die("Connection failed: " . $connnection->connect_error);
+  // Check connection
+
+  if ($connnection->connect_error) {
+    die("Connection failed: " . $connnection->connect_error);
 }
 
 
@@ -37,10 +36,10 @@ $roleID = "";
 
 $userExistMessage = "";
 $errorMessage ="";
-$successMessage="";
+$_SESSION['successMessage']="";
 
 
-
+// for eventual update to database
 if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
     // POST method: add new staff to database
     $staffID = $_POST['staffID'];
@@ -62,7 +61,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($result1->num_rows > 0|| $result2->num_rows > 0) {
             $userExistMessage = "Staff already exists, Check staffID or email";
             die($userExistMessage);
-        }       
+        } 
+        // check if all fields are filled      
         if (empty($staffID) || empty($name) || empty($address) || empty($dateOfBirth) || empty($email) || empty($mobile) || empty($roleID)|| empty($password)
     ){
             $errorMessage = "All fields are required";
@@ -75,7 +75,6 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
 
-
         // add new staff to database
         $sql = "insert into staff (staffID, name, address, dateOfBirth, email, mob, password, roleID)
                  values ('$staffID','$name', '$address', '$dateOfBirth', '$email', '$mobile', '$password', '$roleID')";
@@ -85,6 +84,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
             trigger_error('Invalid query: ' . $connnection->error);
             break;
         }
+        
         $staffID = "";
         $name = "";
         $address = "";
@@ -96,7 +96,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $_SESSION['successMessage'] = "Staff added successfully";
 
-        header("Location: /XCfastfood/index.php");
+       header("Location: /XCfastfood/index.php");
         exit;
 
     } while (false);
@@ -117,19 +117,18 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="container my-5">
         <h2 >New Staff</h2>
-
         <?php
-        if (!empty($errorMessage)){
+       
+       if ( !empty($errorMessage)){
             echo "
             <div class='alert alert-warning alert-dismissible fade show' role='alert'>
                 <strong>$errorMessage</strong>
-                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'> </button>
             </div>
             ";
         }
         ?>    
-
-        <form method="POST">
+        <form action="" method="POST">
         <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">StaffID</label>
                 <div class="col-sm-6">
@@ -171,13 +170,13 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-sm-6">
                     <input type="password" class="form-control" name="password" value="<?php echo $password;?>">
                 </div>
-            </div>            <div class="row mb-3">
+            </div>           
+            <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">RoleID</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="roleID" value="<?php echo $roleID;?>">
                 </div>
             </div>
-
             <?php
             if(!empty($successMessage)){
                 echo "
@@ -198,12 +197,13 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>
 
     </div>
-    <script>https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,48 +1,49 @@
-<?php
- session_start();
+<?php 
+      session_start();
 
- //print_r($_SESSION);
-$staffID = $_SESSION['staffID'];
-$roleID = $_SESSION['roleID'];
-// if user did not login, this will re-direct to login page.
- if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
-    header("location: login.php");
-    exit();
-   }
+     //print_r($_SESSION);
+    $staffID = $_SESSION['staffID'];
+    $roleID = $_SESSION['roleID'];
+    // if user did not login, this will re-direct to login page.
+     if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+        header("location: login.php");
+        exit();
+       }
 
-if($roleID !=3 && $roleID !=4) {
-    echo "You are not authorised to view this page";
-    //session_destroy();
-    //header("Location: /XCfastfood/login.php");
-    //header("location: login.php");
-       exit();
-      }
-                  
-// Create connection
-$connnection = new mysqli("localhost", "root", "", "fastfood_xc");
-// Check connection
-if ($connnection->connect_error) {
- die("Connection failed: " . $connnection->connect_error);
+    if (!empty($_SESSION['updatemessage'])) {
+        echo $_SESSION['updatemessage'];
+        $_SESSION['updatemessage'] = "";}
+                      
+ // Create connection
+ $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
+ // Check connection
+ if ($connnection->connect_error) {
+     die("Connection failed: " . $connnection->connect_error);
+ }
+
+
+if ( $_SERVER['REQUEST_METHOD'] == 'GET'){
+    
+    // Read all row from database table
+    $sql = "SELECT * FROM staff where staffID = $staffID";
+    $result = $connnection->query($sql);
+    $row = $result->fetch_assoc();
+
+    if (!$row){
+        //header("Location: /XCfastfood/index.php");
+        die("Connection failed: " . $connnection->connect_error);
+         }
+        $name = $row['name'];
+        $address = $row['address'];
+        $dateOfBirth = $row['dateOfBirth'];
+        $email = $row['email'];
+        $mobile = $row['mob'];
+        $password = $row['password'];
+        $roleID = $row['roleID'];
+         
 }
-
-
-$staffID = "";
-$name = "";
-$address = "";
-$dateOfBirth = "";
-$email = "";
-$mobile = "";
-$password = "";
-$roleID = "";
-
-$userExistMessage = "";
-$errorMessage ="";
-$successMessage="";
-
-
-
-if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
-    // POST method: add new staff to database
+else{
+ // POST method: update the staff
     $staffID = $_POST['staffID'];
     $name = $_POST['name'];
     $address = $_POST['address'];
@@ -52,59 +53,29 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $roleID = $_POST['roleID'];
 
-
-    do {
-    // check if staff already exists
-     $sql1 = "select * from staff where staffID = '$staffID'";
-     $sql2 = "select * from staff where email = '$email'";
-     $result1 = $connnection->query($sql1);
-     $result2 = $connnection->query($sql2);
-        if ($result1->num_rows > 0|| $result2->num_rows > 0) {
-            $userExistMessage = "Staff already exists, Check staffID or email";
-            die($userExistMessage);
-        }       
-        if (empty($staffID) || empty($name) || empty($address) || empty($dateOfBirth) || empty($email) || empty($mobile) || empty($roleID)|| empty($password)
-    ){
+    do{
+        if(empty($name) || empty($address) || empty($email) || empty($mobile) || empty($roleID)){
             $errorMessage = "All fields are required";
-            die($errorMessage);
+            break;
         }
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $errorEmailMessage = "Invalid email format";
-            die($errorEmailMessage);
-        }
-
-
-
-        // add new staff to database
-        $sql = "insert into staff (staffID, name, address, dateOfBirth, email, mob, password, roleID)
-                 values ('$staffID','$name', '$address', '$dateOfBirth', '$email', '$mobile', '$password', '$roleID')";
+        $sql = "Update staff set name = '$name', address = '$address', dateOfBirth = '$dateOfBirth', email = '$email', mob = '$mobile', password = '$password', roleID = '$roleID' where staffID = $staffID";
         $result = $connnection->query($sql);
-        // check query execution success
+
         if (!$result) {
             trigger_error('Invalid query: ' . $connnection->error);
             break;
         }
-        $staffID = "";
-        $name = "";
-        $address = "";
-        $dateOfBirth = "";
-        $email = "";
-        $mobile = "";
-        $password = "";
-        $roleID = "";
-
-        $_SESSION['successMessage'] = "Staff added successfully";
-
-        header("Location: /XCfastfood/index.php");
-        exit;
-
-    } while (false);
-
+        $_SESSION['updatemessage'] = "Staff updated successfully";
+        if ($data['roleID'] == 3 || $data['roleID'] == 4) {
+            header("Location: /XCfastfood/index2.php");
+            exit;
+        } else {
+        header("Location: /XCfastfood/staffnav.php");
+        exit;}
+    } while(false);
+   
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -116,7 +87,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <div class="container my-5">
-        <h2 >New Staff</h2>
+        <h2 >Update Staff</h2>
 
         <?php
         if (!empty($errorMessage)){
@@ -129,17 +100,12 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         ?>    
 
-        <form method="POST">
-        <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">StaffID</label>
-                <div class="col-sm-6">
-                    <input type="text" class="form-control" name="staffID" value="<?php echo $staffID;?>">
-                </div>
-            </div>
+        <form method="post">
+            <input type="hidden" name="staffID" value="<?php echo $staffID;?>">
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Name</label>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" name="name" value="<?php echo $name;?>">
+                    <input type="int" class="form-control" name="name" value="<?php echo $name;?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -151,7 +117,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="row mb-3">
                 <label class="col-sm-3 col-form-label">Date Of Birth</label>
                 <div class="col-sm-6">
-                    <input type="date" class="form-control" name="dateOfBirth" value="<?php echo $dateOfBirth;?>">
+                    <input type="text" class="form-control" name="dateOfBirth" value="<?php echo $dateOfBirth;?>">
                 </div>
             </div>
             <div class="row mb-3">
@@ -171,7 +137,8 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-sm-6">
                     <input type="password" class="form-control" name="password" value="<?php echo $password;?>">
                 </div>
-            </div>            <div class="row mb-3">
+            </div>            
+            <div class="row mb-3" style="display:none">
                 <label class="col-sm-3 col-form-label">RoleID</label>
                 <div class="col-sm-6">
                     <input type="text" class="form-control" name="roleID" value="<?php echo $roleID;?>">
@@ -198,7 +165,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST') {
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
                 <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index.php" role="button">Cancel</a>
+                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
                 </div>
             </div>
         </form>

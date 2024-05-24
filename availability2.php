@@ -1,37 +1,21 @@
-<?php
-session_start();
- // Create connection
- $connnection = new mysqli("localhost", "root", "", "fastfood_xc");
 
-if ($connnection->connect_error) {
-    die("Connection failed: " . $connnection->connect_error);
-}
+<?php 
+      session_start();
 
-if (isset($_POST['Availability_add_btn'])) {
+     //print_r($_SESSION);
+    $staffID = $_SESSION['staffID'] ;
+    $roleID = $_SESSION['roleID'];
+    // if user did not login, this will re-direct to login page.
+     if(!isset($_SESSION['staffID']) || (trim($_SESSION['staffID']) == '')) {
+        header("location: login.php");
+        exit();
+       }
+    
 
-    $selectedValues = $_POST['availability_staff_add'];
-    $extractvalue = implode(",", $selectedValues);
-    $avail_staffID = $_POST['hiddenstaffID'];
-    // echo $extractvalue;
-    // echo $avail_staffID;
 
-    $sql = "INSERT INTO availability (dateTimeFrom, DateTimeTo, StaffID, rosterID) 
-        SELECT r.dateTimeFrom, r.DateTimeTo, $avail_staffID, r.rosterID 
-        FROM roster as r
-                JOIN rosterrole on r.rosterID = rosterrole.rosterID 
-                JOIN staff on staff.roleID = rosterrole.roleID
-        WHERE r.rosterID IN ($extractvalue)
-        AND staff.staffID = $avail_staffID";
-    $result = $connnection->query($sql);
-    if ($result) {
-        $_SESSION['availcreatemsg'] = "New record update successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . $connnection->error;
-    }
-}
-$connnection->close();
-
+                      
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -49,8 +33,12 @@ $connnection->close();
         </div>
         <div class="card-body">
             <?php
-            if (isset($_SESSION['availcreatemsg'])) {
-                echo $_SESSION['availcreatemsg'];
+            if (!empty($_SESSION['availmessage'])) {
+                echo  $_SESSION['availmessage'];
+                unset($_SESSION['availmessage']);
+            }
+            if (!empty($_SESSION['availcreatemsg'])) {
+                echo  $_SESSION['availcreatemsg'];
                 unset($_SESSION['availcreatemsg']);
             }
             ?>
@@ -90,26 +78,37 @@ $connnection->close();
                     };
                 }
 
-             
-                    //  RoleID is 3 or 4, display all staff details
-                    $new_sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
+                // Display data based on RoleID
+                if ($roleID == 3 || $roleID == 4) {
+                    // If RoleID is 3 or 4, display all staff details
+                    $sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
                     JOIN staff on staff.staffID = av.staffID
                     JOIN role on role.roleID =staff.roleID
-                    order by rosterID,staffID";
-         
+                    order by rosterID, staffID";
+                } else {
+                    // If RoleID is not 3 or 4, display only the user's details
+                    $sql = "SELECT av.AvailabilityID,av.dateTimeFrom,av.dateTimeTo,av.staffID,role.name, av.rosterID FROM availability as av	
+                    JOIN staff on staff.staffID = av.staffID
+                    JOIN role on role.roleID =staff.roleID
+                    WHERE staff.staffID = $staffID
+                    order by rosterID";
+                }
+               
                 // Read all row from database table
-                $new_result = $connnection->query($new_sql);
+
+
+                $result = $connnection->query($sql);
 
                 // don't seem to work
-                if (empty($new_result)) {
+                if (empty($result)) {
                     echo "No data found";
                     header("Location: /XCfastfood/index.php");
                     exit; 
                 }
                 
-                if ($new_result->num_rows > 0) {
+                if ($result->num_rows > 0) {
                 // output data of each row
-                   foreach($new_result as $row) {
+                   foreach($result as $row) {
                 ?>
                     <tr>
                     <td>
@@ -135,14 +134,6 @@ $connnection->close();
             </tbody>
         </table>
         </div>
-            <div class="row mb-3">
-                <!-- <div class="col-sm-3 offset-sm-3 d-grid">
-                    <button type="submit" name="AvailableDelete-btn" class="btn btn-primary">Save</button>
-                </div> -->
-                <div class="col-sm-3 d-grid">
-                    <a class="btn btn-outline-primary" href="/XCfastfood/index2.php" role="button">Cancel</a>
-                </div>
-            </div>
         </form>
     </div>
 

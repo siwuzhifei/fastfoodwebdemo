@@ -72,7 +72,7 @@ else{
             trigger_error('Invalid query: ' . $connnection->error);
             break;
         }
-        $successMessage = "Staff updated successfully";
+        $_SESSION['updatemessage'] = "Staff updated successfully";
         header("Location: /XCfastfood/index.php");
         exit;
     } while(false);
@@ -147,22 +147,6 @@ else{
                     <input type="text" class="form-control" name="roleID" value="<?php echo $roleID;?>">
                 </div>
             </div>
-
-            <?php
-            if(!empty($successMessage)){
-                echo "
-                <div class = 'row mb-3'>
-                    <div class='col-sm-3 offset-sm-3'>
-                        <div class='alert alert-success alert-dismissible fade show' role='alert'>
-                        <strong>$successMessage</strong>
-                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                        </div>
-                    </div>
-                </div>
-                ";
-            }
-            ?>
-
             <div class="row mb-3">
                 <div class="col-sm-3 offset-sm-3 d-grid">
                     <button type="submit" class="btn btn-primary">Save</button>

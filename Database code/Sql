@@ -1,0 +1,83 @@
+CREATE DATABASE Anthony_DW;
+Use Anthony_DW;
+CREATE TABLE Dim_Customer (
+    SK_CustomerID INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID_BK INT,
+    Customer_name VARCHAR(50),
+    Address VARCHAR(255),
+    City VARCHAR(100),
+    State VARCHAR(100),
+    DateOfBirth DATE,
+    Gender enum 
+);
+
+CREATE TABLE Dim_cookstaff (
+    SK_StaffID INT IDENTITY(1,1) PRIMARY KEY,
+    StaffID_BK INT,
+    Staff_name VARCHAR(50),
+    DateOfBirth DATE,
+    Gender VARCHAR(10) -- Assuming Gender is stored as a string enum
+);
+
+CREATE TABLE Dim_branch (
+    SK_BranchID INT IDENTITY(1,1) PRIMARY KEY,
+    BranchID_BK INT,
+    Branch_name VARCHAR(50),
+    Address VARCHAR(255),
+    City VARCHAR(100),
+    State VARCHAR(100),
+    Post_code VARCHAR(10)
+);
+
+CREATE TABLE Dim_MenuItem (
+    SK_MenuItemID INT IDENTITY(1,1) PRIMARY KEY,
+    BK_MenuItemID INT,
+    Item_name VARCHAR(100),
+    Description VARCHAR(255),
+    Menucategory VARCHAR(100)
+);
+
+CREATE TABLE DIM_DATE( 
+    Datekey INT IDENTITY(1,1) PRIMARY KEY,
+    DateValue DATE,
+    DayOfMonth INT,
+    DayOfYear INT,
+    Year INT,
+    MonthOfYear INT,
+    MonthName VARCHAR(10),
+    QuarterOfYear INT,
+    QuarterName VARCHAR(10)
+
+)
+
+CREATE TABLE Dim_time (
+    Timekey INT IDENTITY(1,1) PRIMARY KEY,
+    TimeOfDay TIME,
+    Hour INT,
+    Minute INT,
+    Second INT,
+    AmPm enum,
+    DayNight enum
+);
+
+
+CREATE TABLE Fact_Sales (
+    OrderID INT,
+    OrderlineID INT,
+    SK_CustomerID INT,
+    SK_BranchID INT,
+    SK_MenuItemID INT,
+    OrderDate DATE,
+    OrderTime TIME,
+    StartCookTime TIME,
+    EndCookTime TIME,
+    CollectedTime TIME,
+    UnitCost DECIMAL(10, 2),
+    Quantity INT,
+    CookedBy_StaffID INT,
+    PRIMARY KEY (OrderID, OrderlineID),
+    FOREIGN KEY (SK_CustomerID) REFERENCES Dim_Customer(SK_CustomerID),
+    FOREIGN KEY (SK_BranchID) REFERENCES Dim_Branch(SK_BranchID),
+    FOREIGN KEY (SK_MenuItemID) REFERENCES Dim_MenuItem(SK_MenuItemID),
+    FOREIGN KEY (CookedBy_StaffID) REFERENCES Dim_CookStaff(SK_StaffID)
+);
